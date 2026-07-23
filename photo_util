@@ -1,0 +1,35 @@
+public static boolean uriToImageView(Context context, Uri uri, ImageView imageView){
+
+        Log.d("kkang", "${uri.toString()}");
+        BitmapFactory.Options option = new BitmapFactory.Options();
+        option.inSampleSize = 10;
+        try {
+
+            InputStream inputStream = context.getContentResolver().openInputStream(uri);
+            Bitmap bitmap = BitmapFactory.decodeStream(inputStream, null, option);
+            inputStream.close();
+            if(bitmap != null) {
+                imageView.setImageBitmap(bitmap);
+                return true;
+            }else {
+                return  false;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+
+    }
+
+    public static boolean fileToImageView(Context context, String filePath, ImageView imageView){
+        BitmapFactory.Options option = new BitmapFactory.Options();
+        option.inSampleSize = 10;
+
+        Bitmap bitmap = BitmapFactory.decodeFile(filePath, option);
+        if(bitmap != null) {
+            imageView.setImageBitmap(bitmap);
+            return true;
+
+        }
+        return false;
+    }
