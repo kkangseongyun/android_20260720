@@ -1,0 +1,75 @@
+ActivityResultLauncher<Intent> requestGalleryLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(), result -> {
+            try {
+
+                
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
+        ActivityResultLauncher<String> permissionLauncher = registerForActivityResult(
+               new ActivityResultContracts.RequestPermission(), result -> {
+            if (result) {
+
+            } else {
+                Toast.makeText(this, "permission denied...", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        binding.galleryButton.setOnClickListener(view -> {
+
+            if(Build.VERSION.SDK_INT >= 33) {
+                if (ContextCompat.checkSelfPermission(this, "android.permission.READ_MEDIA_IMAGES") == PackageManager.PERMISSION_GRANTED) {
+                    Intent intent = new Intent(
+                            Intent.ACTION_PICK,
+                            MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    intent.setType("image/*");
+                    requestGalleryLauncher.launch(intent);
+                } else {
+                    permissionLauncher.launch("android.permission.READ_MEDIA_IMAGES");
+                }
+
+            }else {
+                if (ContextCompat.checkSelfPermission(this, "android.permission.READ_EXTERNAL_STORAGE") == PackageManager.PERMISSION_GRANTED) {
+                    Intent intent = new Intent(
+                            Intent.ACTION_PICK,
+                            MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    intent.setType("image/*");
+                    requestGalleryLauncher.launch(intent);
+                } else {
+                    permissionLauncher.launch("android.permission.READ_EXTERNAL_STORAGE");
+                }
+            }
+
+        });
+
+        ActivityResultLauncher<Intent> requestCameraFileLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(), result -> {
+            // 카메라 앱
+            PhotoUtil.fileToImageView(this, cameraFilePath, binding.userImageView);
+            photo = cameraFilePath;
+
+        });
+        binding.cameraButton.setOnClickListener(view -> {
+
+            String timeStamp =
+                    new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+            try {
+                File storageDir =
+                        getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+                File file = File.createTempFile(
+                        "JPEG_${timeStamp}_",
+                        ".jpg",
+                        storageDir
+                );
+                
+
+
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+        });
+
+
