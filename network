@@ -1,0 +1,21 @@
+implementation("com.google.code.gson:gson:2.10.1")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+
+
+
+------------------
+
+public class News {
+    long id;
+    String author;
+    String title;
+    String description;
+    String urlToImage;
+    String publishedAt;
+}
+
+-------------------------
+public class Page {
+    public ArrayList<News> articles;
+}
