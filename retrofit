@@ -1,0 +1,50 @@
+News news = datas.get(position);
+
+        holder.binding.itemTitle.setText(news.title);
+        holder.binding.itemDesc.setText(news.description);
+        holder.binding.itemTime.setText(news.author + " At " + news.publishedAt);
+        if (news.urlToImage != null) {
+            Call<ResponseBody> avatarImageCall = application.networkService.getNetworkImage(news.urlToImage);
+            avatarImageCall.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    if (response.isSuccessful()) {
+                        if (response.body() != null) {
+                            Bitmap bitmap = BitmapFactory.decodeStream(response.body().byteStream());
+                            holder.binding.itemImage.setImageBitmap(bitmap);
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                }
+
+            });
+        }
+
+-----------------------------
+
+MyApplication application = (MyApplication) getActivity().getApplicationContext();
+        Call<Page> call = application.networkService.getList(
+                "swiss",
+                application.API_KEY,
+                1,
+                10
+        );
+
+        call.enqueue(new Callback<Page>() {
+            @Override
+            public void onResponse(Call<Page> call, Response<Page> response) {
+                if(response.isSuccessful()){
+                    binding.newsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                    binding.newsRecyclerView.setAdapter(new MyAdapter(application, response.body().articles));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Page> call, Throwable t) {
+
+            }
+        });
